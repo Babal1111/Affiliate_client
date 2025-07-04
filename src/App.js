@@ -17,6 +17,8 @@ import ManageUsers from "./pages/users/ManageUsers";
 import ProtectedRoute from "./rbac/ProtectedRoute";
 import UnauthorizedAccess from "./components/UnauthorizedAccess";
 
+import ManagePayments from "./pages/payments/ManagePayments";
+
 function App() {
   // Tracking user details in App because App is the component which decides
   // where to navigate based on the current route and it needs to know whether
@@ -52,6 +54,13 @@ function App() {
 
   return (
     <Routes>
+      <Route path = "/manage-payment" element={
+        userDetails? <UserLayout>
+          <ManagePayments/>
+        </UserLayout>:
+        <Navigate to = "/login"/>
+
+      }/>
       <Route path="/" element={userDetails ?
         <UserLayout>
           <Navigate to='/dashboard' />

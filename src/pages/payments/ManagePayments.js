@@ -130,3 +130,4 @@ function ManagePayments(){
 }
 
 
+export default ManagePayments;

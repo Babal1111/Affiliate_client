@@ -1,10 +1,13 @@
 import {useDispatch, useSelector} from "react-redux";
-import { CREDIT_PACK, PLAN_IDS,pricingList } from "../../../../server/src/constants/payments";
-
-import { useState } from "react";
+import { CREDIT_PACKS, PLAN_IDS,pricingList } from "../../config/payments";
+import {Modal} from 'react-bootstrap'
+import { useState } from "react"
 import axios from "axios"
 import {serverEndpoint} from "../../config/config"
-function PurchaseCredit(){
+import {SET_USER}from"../../redux/user/actions"
+import './PurchaseCredit.css'
+
+function PurchaseCredits(){
     const dispatch = useDispatch();
     const userDetails = useSelector((state)=>state.userDetails);
     const [errors,setErrors] = useState({});
@@ -46,7 +49,7 @@ function PurchaseCredit(){
                         });
                         setMessage(`${credits} added !`);
                     }
-                    catch{
+                    catch(error){
                         console.log(error);
                         setErrors({message:'Unable to purchase credits, please try again'});
                     }
@@ -63,12 +66,12 @@ function PurchaseCredit(){
             setErrors({message:'Unable to purchase credits, please try again'});
         }
     };
-    const handleSubscribe = async(plankey) =>{
+    const handleSubscribe = async(planKey) =>{
             try{
                 const {data} = await axios.post(`${serverEndpoint}/payemts/create-subscription`,{
                     plan_name: planKey
                 },{withCredentials: true});
-                const plan = PLAN_IDS[plankey];
+                const plan = PLAN_IDS[planKey];
                 const options = {
                     key: process.env.REACT_APP_RAZORPAY_KEY_ID,
                     name: plan.planName,
@@ -221,3 +224,5 @@ function PurchaseCredit(){
   </section>
 );
 }
+
+export default PurchaseCredits;

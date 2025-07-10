@@ -7,8 +7,10 @@ import axios from 'axios';
 import { serverEndpoint } from "../../config/config";
 import { Modal } from 'react-bootstrap';
 import { usePermission } from '../../rbac/permissions';
-
+import AssesmentIcon from '@mui/icons-material/Assessment';
+import { useNavigate } from 'react-router-dom';
 function LinkDashboard() {
+    const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [linksData, setLinksData] = useState([]);
     const [formData, setFormData] = useState({
@@ -191,6 +193,12 @@ function LinkDashboard() {
                             <DeleteIcon onClick={() => handleDeleteModalShow(params.row._id)} />
                         </IconButton>
                     )}
+                    {permission.canViewLink && (
+                        <IconButton>
+                            <AssesmentIcon onClick={() => navigate(`/analytics/${params.row._id}`)} />
+                        </IconButton>
+                    )}
+                    
                 </>
             )
         },

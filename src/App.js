@@ -16,7 +16,7 @@ import Spinner from "./components/Spinner";
 import ManageUsers from "./pages/users/ManageUsers";
 import ProtectedRoute from "./rbac/ProtectedRoute";
 import UnauthorizedAccess from "./components/UnauthorizedAccess";
-
+import AnalyticsDashboard from "./pages/links/AnalyticsDashboard";
 import ManagePayments from "./pages/payments/ManagePayments";
 
 function App() {
@@ -64,7 +64,7 @@ function App() {
       <Route path = "/analytics/:linkId" element= {
         userDetails?
          <UserLayout>
-          <ManagePayments/>
+          <AnalyticsDashboard/>
         </UserLayout>:
         <Navigate to = "/login"/>
       }/>

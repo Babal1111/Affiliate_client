@@ -136,7 +136,10 @@ function LinkDashboard() {
                 });
                 fetchLinks();
             } catch (error) {
-                setErrors({ message: 'Something went wrong, please try again' });
+                  const serverMessage =
+    error.response && error.response.data && error.response.data.message;
+
+                setErrors({ message: serverMessage || 'Something went wrong, please try again' });
             } finally {
                 handleModalClose();
             }

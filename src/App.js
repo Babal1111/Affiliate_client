@@ -61,6 +61,13 @@ function App() {
         <Navigate to = "/login"/>
 
       }/>
+      <Route path = "/analytics/:linkId" element= {
+        userDetails?
+         <UserLayout>
+          <ManagePayments/>
+        </UserLayout>:
+        <Navigate to = "/login"/>
+      }/>
       <Route path="/" element={userDetails ?
         <UserLayout>
           <Navigate to='/dashboard' />

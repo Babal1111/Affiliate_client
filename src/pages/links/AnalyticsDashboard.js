@@ -111,7 +111,7 @@ function AnalyticsDashBoard(){
         {field:'isp',headerName:'ISP',flex:'1'},
         {field:'clickedAt',headerName:'Click Date',flex:'1',renderCell:(params)=>(
             <>
-            {fromDate(params.row.clickedAt)} 
+            {formDate(params.row.clickedAt)} 
             {/*? why */}
             </>
         )},
@@ -188,7 +188,7 @@ function AnalyticsDashBoard(){
                 </div>
             </div>
             <DataGrid
-            getRow = {(row)=> row._id}
+            getRowId = {(row)=> row._id}
             rows = {analyticsData}
             columns = {columns}
             initialState = {{

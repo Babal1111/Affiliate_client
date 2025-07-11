@@ -26,7 +26,7 @@ function Subscription(){
     const [errors,setErrors] = useState({});
     const [message,setMessage] = useState(null);
 
-    const Subscription = userDetails.Subscription;
+    const subscription = userDetails.Subscription;
 
     const handleCancel = async ()=>{
 

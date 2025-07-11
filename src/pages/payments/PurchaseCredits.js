@@ -68,7 +68,7 @@ function PurchaseCredits(){
     };
     const handleSubscribe = async(planKey) =>{
             try{
-                const {data} = await axios.post(`${serverEndpoint}/payemts/create-subscription`,{
+                const {data} = await axios.post(`${serverEndpoint}/payments/create-subscription`,{
                     plan_name: planKey
                 },{withCredentials: true});
                 const plan = PLAN_IDS[planKey];

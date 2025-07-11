@@ -27,6 +27,18 @@ function App() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
+  const attemptToRefreshToken= async()=>{
+    try {
+      const response = await axios.post(`${serverEndpoint}/auth/refresh-token`,{},{withCredentials:true});
+      // if we were able to get the response ie we will ubdate the user object
+      dispatch({
+        type:SET_USER,
+        payload: response.data.userDetails
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const isUserLoggedIn = async () => {
     try {
       const response = await axios.post(`${serverEndpoint}/auth/is-user-logged-in`, {}, {
@@ -38,6 +50,10 @@ function App() {
         payload: response.data.userDetails
       });
     } catch (error) {
+      if( error.response?.status === 401){ // ie token expired , then only well'call the function to refresh the token
+         console.log('token expired attempting to referesh');
+         await attemptToRefreshToken(); //calling the function IN UI tO REFRESH TOKEN
+      }
       console.log('User not loggedin', error);
     } finally {
       setLoading(false);

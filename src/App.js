@@ -18,7 +18,8 @@ import ProtectedRoute from "./rbac/ProtectedRoute";
 import UnauthorizedAccess from "./components/UnauthorizedAccess";
 import AnalyticsDashboard from "./pages/links/AnalyticsDashboard";
 import ManagePayments from "./pages/payments/ManagePayments";
-
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 function App() {
   // Tracking user details in App because App is the component which decides
   // where to navigate based on the current route and it needs to know whether
@@ -92,6 +93,8 @@ function App() {
           <Home />
         </AppLayout>
       } />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* We're passing updateUserDetails function to Login because thats where 
           we'll get user information are autnetication. */}

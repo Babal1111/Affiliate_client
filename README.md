@@ -52,11 +52,7 @@ Affiliate++ is a modern affiliate link management web application designed to si
 
 ---
 
-## 📸 Screenshots
 
-> _You can include screenshots like login page, dashboard, analytics page, etc._  
-> Example:
-> ![Dashboard Screenshot](./screenshots/dashboard.png)
 
 ---
 
@@ -87,6 +83,9 @@ cd Affiliate_client
 # Install dependencies
 npm install
 
+# Frontend dependencies
+npm install react react-router-dom axios jwt-decode bootstrap @mui/material @mui/icons-material react-google-login razorpay
+
 # Create a .env file
 touch .env
 Frontend .env:
@@ -110,6 +109,12 @@ cd Affiliate_server
 # Install dependencies
 npm install
 
+# Backend dependencies
+npm install express mongoose jsonwebtoken bcryptjs cors dotenv razorpay express-validator  cookie-parser
+
+# Dev dependencies (optional, for development use)
+npm install --save-dev nodemon
+
 # Create backend .env file
 touch .env
 Backend .env:
@@ -121,32 +126,6 @@ bash
 
 # Start backend server
 npm run dev
-📦 Dependency Summary
-Frontend (Affiliate_client/package.json)
-Package	Use Case
-react	Frontend framework
-react-router-dom	Routing
-axios	HTTP requests
-jwt-decode	Decode JWT in frontend
-bootstrap	Styling
-@mui/material	Material UI components
-@mui/icons-material	Icons for MUI
-react-google-login	OAuth authentication
-razorpay	Razorpay payment integration
-
-Backend (Affiliate_server/package.json)
-Package	Use Case
-express	Web server framework
-mongoose	MongoDB ORM
-jsonwebtoken	JWT-based auth
-bcryptjs	Password hashing
-cors	Cross-origin support
-dotenv	Manage env variables
-razorpay	Payment processing integration
-express-validator	Request validation
-uuid	Unique ID generation
-cookie-parser	JWT in cookies
-nodemon	Dev server auto-restart
 
 🤝 Contributing
 Contributions are welcome!

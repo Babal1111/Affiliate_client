@@ -21,6 +21,19 @@ function LinkDashboard() {
     const [showModal, setShowModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const permission = usePermission();
+ 
+    const [loading,setLoading] = useState(false);
+    const[searchItem,setSearchItem] = useState('');
+    const [currentPage,setCurrentPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10)
+    const [totalCount, setTotalCount] = useState(0);
+    // MUI DataGrid require array of fields as the sort model when using server side rendering
+    // when using client-side paginatiop/sorting.filter/serach MUI takes care of every thing
+    // abstracting the implimentation details, since we're now managing the data using serever
+    //we need to manage everything and let data grid know
+    const [sortModel, setSortModel] = useState([
+        {field:'createdAt', sort:"dec"}
+    ]);
 
     const handleModalShow = (isEdit, data = {}) => {
         if (isEdit) {
@@ -150,19 +163,34 @@ function LinkDashboard() {
 
     const fetchLinks = async () => {
         try {
+            const sortField = sortModel[0]?.field || "createdAt";
+            const sortOrder = sortModel[0]?.sort || "desc";
+            const params = {
+                currentPage: currentPage,
+                sortField: sortField,
+                sortOrder: sortOrder,
+                pageSize:pageSize,
+                searchItem:searchItem
+           };
+            
             const response = await axios.get(`${serverEndpoint}/links`, {
-                withCredentials: true
+                withCredentials: true,
+                params: params
             });
-            setLinksData(response.data.data);
+            setLinksData(response.data.data.links);
+            setTotalCount(response.data.data.totalCount);
         } catch (error) {
             console.log(error);
             setErrors({ message: 'Unable to fetch links at the moment, please try again' });
+        }
+        finally{
+            setLoading(false);
         }
     };
 
     useEffect(() => {
         fetchLinks();
-    }, []);
+    }, [currentPage,pageSize,sortModel,searchItem]);
 
     const columns = [
         { field: 'campaignTitle', headerName: 'Campaign', flex: 2 },
@@ -180,7 +208,7 @@ function LinkDashboard() {
         { field: 'category', headerName: 'Category', flex: 2 },
         { field: 'clickCount', headerName: 'Clicks', flex: 1 },
         {
-            field: 'action', headerName: 'Action', flex: 1, renderCell: (params) => (
+            field: 'action', headerName: 'Action', flex: 1, sortable:false,enderCell: (params) => (
                 <>
                     {permission.canEditLink && (
                         <IconButton>
@@ -201,7 +229,22 @@ function LinkDashboard() {
                     
                 </>
             )
-        },
+        },{
+            field:'share',
+            headerName: 'Share Affiliate Link',
+            flex:'1.5',
+            renderCell: (params)=>{
+                const shareUrl = `${serverEndpoint}/links/r/${params.row._id}`;
+                return (
+                    <button className='btn btn-outline-primary btn-sm'
+                     onClick={(e)=>{
+                        navigator.clipboard.writeText(shareUrl); // will automaticaly copy to clipboard
+                     }}>
+                        Copy
+                     </button>
+                )
+            }
+        }
     ];
 
     return (
@@ -224,6 +267,13 @@ function LinkDashboard() {
                     {errors.message}
                 </div>
             )}
+            <div className='mb-2'>
+                <input type="text" className="form-control" placeholder="Enter CampaignTitle, OriginalUrl or Categoty" 
+                onChange={(e)=>{
+                    setSearchItem(e.target.value);
+                    setCurrentPage(0); //reset to first page
+                }}></input>
+            </div>
 
             <div style={{ height: 500, width: '100%' }}>
                 <DataGrid
@@ -232,10 +282,30 @@ function LinkDashboard() {
                     columns={columns}
                     initialState={{
                         pagination: {
-                            paginationModel: { pageSize: 20, page: 0 },
+                            // paginationModel: { pageSize: 20, page: 0 },
+                            paginationModel: { pageSize: pageSize, page: currentPage },
                         },
                     }}
-                    pageSizeOptions={[20, 50, 100]}
+                
+                    paginationMode="server"
+                    pageSizeOptions={[2, 3, 4]}
+                    onPaginationModelChange={(newPage)=>{
+                        setCurrentPage(newPage.page);
+                        setPageSize(newPage.pageSize);
+                    }}
+
+                    onPageSizeChange ={(newPageSize)=>{
+                        setPageSize(newPageSize);
+                        setCurrentPage(0); //reset to first page
+                    }}
+                    rowCount={totalCount}
+
+                    sortingMode='server'
+                    sortModel={sortModel}
+                    onSortModelChange={(model)=>{
+                        setSortModel(model);
+                        setCurrentPage(0); //reset to first page
+                    }}
                     disableRowSelectionOnClick
                     showToolbar
                     sx={{
